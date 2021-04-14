@@ -37,6 +37,146 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         
+        var element = 5
+        
+        while element > 1 {
+            element -= 1
+            if element < 1 { continue }
+            print("hsahksas")
+        }
+        print("sklaklsa")
+        
+        
+        // 生成螺旋矩阵
+        func generateMatrix(_ n: Int) -> [[Int]] {
+            if n == 0 { return [[Int]]() }
+            var matrix = Array(repeating: Array(repeating: 0, count: n), count: n)
+            var ele = 1
+            var left = 0, right = n - 1, top = 0, bottom = n - 1
+            while ele <= n * n {
+                for i in left...right {
+                    matrix[left][i] = ele
+                    ele += 1
+                }
+                if ele > n * n { continue }
+                top += 1
+                
+                for i in top...bottom {
+                    matrix[i][right] = ele
+                    ele += 1
+                }
+                if ele > n * n { continue }
+                right -= 1
+                
+                for i in (left...right).reversed() {
+                    matrix[bottom][i] = ele
+                    ele += 1
+                }
+                if ele > n * n { continue }
+                bottom -= 1
+                
+                for i in (top...bottom).reversed() {
+                    matrix[i][left] = ele
+                    ele += 1
+                }
+                if ele > n * n { continue }
+                left += 1
+            }
+                        
+            return matrix
+        }
+        
+        print("generate matrix = \(generateMatrix(3))")
+        
+        
+        
+        // [[1,2,3],[4,5,6],[7,8,9]] -> [1,2,3,6,9,8,7,4,5]
+            // [[1,2,3]] -> [1,2,3]
+            // [[]] -> []
+            // [[1,2,3],[4,5,6],[7,8,9],[10,11,12]] -> [1,2,3,6,9,12,11,10,7,4,5,8]
+
+            func spiralOrder(_ matrix: [[Int]]) -> [Int] {
+                var res = [Int]()
+                if matrix.count == 0 { return res }
+                var left = 0, right = matrix.first!.count - 1, top = 0, bottom = matrix.count - 1
+                var eleCount = matrix.first!.count * matrix.count // 数组个数
+
+                // left         ->                     right
+                // 1            2           3           4   top
+                // 5            6           7           8
+                // 9            10          11          12  ⏬
+                // 13           14          15          16  bottom
+                while (eleCount >= 1) {
+                    // 第一层 从左向右遍历
+                    for i in left...right {
+                        res.append(matrix[left][i])
+                        eleCount -= 1
+                    }
+                    if eleCount < 1 { continue }
+                    top += 1
+
+                    // 第二层 从上到下遍历
+                    for i in top...bottom {
+                        res.append(matrix[i][right])
+                        eleCount -= 1
+                    }
+                    if eleCount < 1 { continue }
+                    right -= 1
+
+                    // 第三层 从右向左遍历
+                    for i in (left...right).reversed() {
+                        res.append(matrix[bottom][i])
+                        eleCount -= 1
+                    }
+                    if eleCount < 1 { continue }
+                    bottom -= 1
+
+                    // 第四层 从下到上遍历
+                    for i in (top...bottom).reversed() {
+                        res.append(matrix[i][left])
+                        eleCount -= 1
+                    }
+                    if eleCount < 1 { continue }
+                    left += 1
+                }
+
+                return res
+            }
+        
+        print("spiral == \(spiralOrder([[1,2,3],[4,5,6],[7,8,9],[10,11,12]]))")
+//        private static List<Integer> spiralOrder(int[][] matrix) {
+//                LinkedList<Integer> result = new LinkedList<>();
+//                if(matrix==null||matrix.length==0) return result;
+//                int left = 0;
+//                int right = matrix[0].length - 1;
+//                int top = 0;
+//                int bottom = matrix.length - 1;
+//                int numEle = matrix.length * matrix[0].length;
+//                while (numEle >= 1) {
+//                    for (int i = left; i <= right && numEle >= 1; i++) {
+//                        result.add(matrix[top][i]);
+//                        numEle--;
+//                    }
+//                    top++;
+//                    for (int i = top; i <= bottom && numEle >= 1; i++) {
+//                        result.add(matrix[i][right]);
+//                        numEle--;
+//                    }
+//                    right--;
+//                    for (int i = right; i >= left && numEle >= 1; i--) {
+//                        result.add(matrix[bottom][i]);
+//                        numEle--;
+//                    }
+//                    bottom--;
+//                    for (int i = bottom; i >= top && numEle >= 1; i--) {
+//                        result.add(matrix[i][left]);
+//                        numEle--;
+//                    }
+//                    left++;
+//                }
+//                return result;
+//            }
+        
         
         func reserveNode(_ head: ListNode?) -> ListNode? {
             guard let head = head else { return nil }
@@ -87,15 +227,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             if s.count == 0 { return 0 }
             var left = 0, right = 0, dic = [Character: Int]()
             for (i, char) in s.enumerated() {
-                let val = dic[char]
-                if val != nil {
-                    left = val! + 1
+                if let val = dic[char] {
+                    
                 }
                 dic[char] = i
-                right += 1
-                print(left, right)
             }
-            return right - left
+            return 0
         }
         
         print(lengthOfLongestSubstring("abcabcbb"))
